@@ -4,25 +4,19 @@ pipeline
 
     stages 
     {
-        stage('Sensitive Information') 
+        stage('Code Review') 
         {
             steps 
             {
-                sh 'ls'
+                sh 'devskim analyze .'
+                sh 'devskim analyze . output.json -f json'
             }
         }
         stage('SCA') 
         {
             steps 
             {
-                sh 'cd ..'
-            }
-        }
-        stage('Code Review') 
-        {
-            steps 
-            {
-                sh 'ifconfig'
+                sh ''
             }
         }  
         stage('Arachni - DAST') 
