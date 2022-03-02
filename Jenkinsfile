@@ -37,7 +37,7 @@ pipeline
         {
             steps 
             {
-                sh '/root/devsecops/arachni/bin/arachni http://192.168.6.190/Vulnerable-Web-Application/homepage.html'
+                sh 'sudo /root/devsecops/arachni/bin/arachni http://192.168.6.190/Vulnerable-Web-Application/homepage.html'
             }
         }  
         stage('ZAP - DAST') 
