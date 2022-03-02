@@ -23,9 +23,7 @@ pipeline
         {
             steps 
             {
-                sh '''
-                sonar-scanner -Dsonar.projectKey=TX-DevSecOps -Dsonar.sources=. -Dsonar.host.url=http://192.168.6.208:9000 -Dsonar.login=cecd6d7e767c764d7576029905a6e334f43232ee
-  				'''
+                sh '/opt/sonar/bin/sonar-scanner -Dsonar.projectKey=TX-DevSecOps -Dsonar.sources=Vulnerable-Web-Application -Dsonar.host.url=http://192.168.6.208:9000 -Dsonar.login=cecd6d7e767c764d7576029905a6e334f43232ee -X'
             }
         }
         stage('Build') 
