@@ -4,7 +4,14 @@ pipeline
 
     stages 
     {
-        stage('Code Review') 
+        stage('SCA') 
+        {
+            steps 
+            {
+                sh 'dependency-check.sh --scan .'
+            }
+        }
+        stage('Code Review Using DevSkim') 
         {
             steps 
             {
@@ -12,11 +19,13 @@ pipeline
                 sh 'devskim analyze . output.json -f json'
             }
         }
-        stage('SCA') 
+        stage('Code Review Using SonarQube') 
         {
             steps 
             {
-                sh 'sudo dependency-check.sh --scan .'
+                sh '''
+                sonar-scanner -Dsonar.projectKey=TX-DevSecOps -Dsonar.sources=. -Dsonar.host.url=http://192.168.6.208:9000 -Dsonar.login=cecd6d7e767c764d7576029905a6e334f43232ee
+  				'''
             }
         }
         stage('Build') 
@@ -30,7 +39,7 @@ pipeline
         {
             steps 
             {
-                sh 'sudo /root/devsecops/arachni/bin/arachni http://192.168.6.190/Vulnerable-Web-Application/homepage.html'
+                sh '/root/devsecops/arachni/bin/arachni http://192.168.6.190/Vulnerable-Web-Application/homepage.html'
             }
         }  
         stage('ZAP - DAST') 
@@ -46,13 +55,6 @@ pipeline
             {
                 sh 'nikto -h http://192.168.6.190/Vulnerable-Web-Application/homepage.html'
                 
-            }
-        }
-        stage('Open VAS - Infra Scan') 
-        {
-            steps 
-            {
-                echo 'abhay'
             }
         }
     }
