@@ -16,28 +16,35 @@ pipeline
         {
             steps 
             {
-                sh ''
+                sh 'dependency-check.sh --scan .'
+            }
+        }
+        stage('Build') 
+        {
+            steps 
+            {
+                echo 'Application hosted on Local Server'
             }
         }  
         stage('Arachni - DAST') 
         {
             steps 
             {
-                sh 'pwd'
+                sh '/root/devsecops/arachni/bin/arachni http://192.168.6.190/Vulnerable-Web-Application/homepage.html'
             }
         }  
         stage('ZAP - DAST') 
         {
             steps 
             {
-                sh 'ls -la'
+                sh 'sudo docker run -t owasp/zap2docker-stable zap-baseline.py -t http://192.168.6.190/Vulnerable-Web-Application/homepage.html || true'
             }
         }
          stage('Nikto - DAST') 
         {
             steps 
             {
-                sh 'ifconfig'
+                sh 'nikto -h http://192.168.6.190/Vulnerable-Web-Application/homepage.html'
                 
             }
         }
