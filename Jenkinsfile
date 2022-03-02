@@ -16,7 +16,7 @@ pipeline
         {
             steps 
             {
-                sh 'dependency-check.sh --scan .'
+                sh 'sudo dependency-check.sh --scan .'
             }
         }
         stage('Build') 
