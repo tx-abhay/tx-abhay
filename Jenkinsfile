@@ -9,7 +9,7 @@ pipeline
             steps 
             {
                 sh 'sudo dependency-check.sh --scan . -f XML -o .'
-                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: O96ALLXyBYbIDTMGcX80XAMSKoa8DevtFE4Yr4KRHZ4VgtKs14a1Yt2HJ5in30HW" -F "scan_date=2022-03-03" -F "minimum_severity=Critical" -F "active=true" -F "verified=true" -F "scan_type=Dependency Check Scan" -F "file=@dependency-check-report.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=AdHoc Import - Wed, 02 Mar 2022 11:43:15" -F "close_old_findings=false" -F "push_to_jira=false"'
+                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: O96ALLXyBYbIDTMGcX80XAMSKoa8DevtFE4Yr4KRHZ4VgtKs14a1Yt2HJ5in30HW" -F "scan_date=2022-03-03" -F "minimum_severity=Critical" -F "active=true" -F "verified=true" -F "scan_type=Dependency Check Scan" -F "file=@dependency-check-report.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=AdHoc Import - Wed, 02 Mar 2022 11:43:15" -F "close_old_findings=false" -F "push_to_jira=false"'
             }
         }
         stage('Code Review Using DevSkim') 
