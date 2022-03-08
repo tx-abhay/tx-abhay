@@ -41,13 +41,7 @@ pipeline
                 sh 'sudo docker run -t owasp/zap2docker-stable zap-baseline.py -t http://192.168.6.190/Vulnerable-Web-Application/homepage.html || true'
             }
         }
-        stage('BURP - DAST') 
-        {
-            steps 
-            {
-                sh 'curl -vgw -X POST "http://127.0.0.1:1337/v0.1/scan" -d '{"urls":["http://192.168.6.190/Vulnerable-Web-Application/homepage.html"]}''
-            }
-        }
+        
          stage('Nikto - DAST') 
         {
             steps 
