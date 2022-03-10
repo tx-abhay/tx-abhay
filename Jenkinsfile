@@ -9,7 +9,8 @@ pipeline
             steps 
             {
                 sh 'sudo dependency-check.sh --scan . -f XML -o .'
-                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: O96ALLXyBYbIDTMGcX80XAMSKoa8DevtFE4Yr4KRHZ4VgtKs14a1Yt2HJ5in30HW" -F "scan_date=2022-03-03" -F "minimum_severity=Critical" -F "active=true" -F "verified=true" -F "scan_type=Dependency Check Scan" -F "file=@dependency-check-report.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=AdHoc Import - Wed, 02 Mar 2022 11:43:15" -F "close_old_findings=false" -F "push_to_jira=false"'
+
+                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=Dependency Check Scan" -F "file=@dependency-check-report_v5.2.0_webgoat8.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
             }
         }
         stage('Code Review Using SonarQube') 
@@ -17,7 +18,9 @@ pipeline
             steps 
             {
                 sh '/opt/sonar/bin/sonar-scanner -Dsonar.projectKey=Testing -Dsonar.sources=. -Dsonar.host.url=http://192.168.6.208:9000 -Dsonar.login=cecd6d7e767c764d7576029905a6e334f43232ee -X'
-                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: O96ALLXyBYbIDTMGcX80XAMSKoa8DevtFE4Yr4KRHZ4VgtKs14a1Yt2HJ5in30HW" -F "scan_date=2022-03-03" -F "minimum_severity=Critical" -F "active=true" -F "verified=true" -F "scan_type=Dependency Check Scan" -F "file=@dependency-check-report.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=AdHoc Import - Wed, 02 Mar 2022 11:43:15" -F "close_old_findings=false" -F "push_to_jira=false"'
+
+                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=SonarQube Scan" -F "file=@sonar-report-v1.1.0_java-tomcat_Sonarcloud-v8.0.0.485.html;type=text/html" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
+
             }
         }
         stage('Build') 
@@ -32,6 +35,8 @@ pipeline
             steps 
             {
                 sh 'sudo /root/devsecops/arachni/bin/arachni http://192.168.6.190/Vulnerable-Web-Application/homepage.html'
+
+                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=Arachni Scan" -F "file=@arachni.afr.json;type=application/json" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
             }
         }  
         stage('ZAP - DAST') 
@@ -39,14 +44,26 @@ pipeline
             steps 
             {
                 sh 'sudo docker run -t owasp/zap2docker-stable zap-baseline.py -t http://192.168.6.190/Vulnerable-Web-Application/homepage.html || true'
+
+                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=ZAP Scan" -F "file=@zaproxy-wavsep_v1.4.0.1.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
             }
         }
-        
+        stage('BURP - DAST') 
+        {
+            steps 
+            {
+                echo 'Runing Burp Scan'
+
+                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=Burp Scan" -F "file=@burpvulns_v2_1_02.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
+            }
+        }
          stage('Nikto - DAST') 
         {
             steps 
             {
                 sh 'nikto -h http://192.168.6.190/Vulnerable-Web-Application/homepage.html'
+
+                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=Nikto Scan" -F "file=@nikto.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
                 
             }
         }
