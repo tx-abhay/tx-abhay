@@ -39,15 +39,6 @@ pipeline
                 sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=Arachni Scan" -F "file=@arachni.afr.json;type=application/json" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
             }
         }  
-        stage('ZAP - DAST') 
-        {
-            steps 
-            {
-                sh 'sudo docker run -t owasp/zap2docker-stable zap-baseline.py -t http://192.168.6.190/Vulnerable-Web-Application/homepage.html || true'
-
-                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=ZAP Scan" -F "file=@zaproxy-wavsep_v1.4.0.1.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
-            }
-        }
         stage('BURP - DAST') 
         {
             steps 
@@ -65,6 +56,15 @@ pipeline
 
                 sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=Nikto Scan" -F "file=@nikto.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
                 
+            }
+        }
+        stage('ZAP - DAST') 
+        {
+            steps 
+            {
+                sh 'sudo docker run -t owasp/zap2docker-stable zap-baseline.py -t http://192.168.6.190/Vulnerable-Web-Application/homepage.html || true'
+
+                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=ZAP Scan" -F "file=@zaproxy-wavsep_v1.4.0.1.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
             }
         }
     }
