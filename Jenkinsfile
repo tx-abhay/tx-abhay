@@ -17,7 +17,7 @@ pipeline
         {
             steps 
             {
-                sh '/opt/sonar/bin/sonar-scanner -Dsonar.projectKey=TX-DevSecOps -Dsonar.sources=. -Dsonar.host.url=http://192.168.6.208:9000 -Dsonar.login=973b03079dcffe8cda74174488d1d4e5146a8f65 -X'
+                sh '/home/testing/devsecops-tools/sonar/bin/sonar-scanner -Dsonar.projectKey=TX-DevSecOps -Dsonar.sources=. -Dsonar.host.url=http://192.168.6.208:9000 -Dsonar.login=973b03079dcffe8cda74174488d1d4e5146a8f65 -X'
 
                 sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=SonarQube Scan" -F "file=@sonar-report-v1.1.0_java-tomcat_Sonarcloud-v8.0.0.485.html;type=text/html" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
 
