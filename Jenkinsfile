@@ -17,7 +17,7 @@ pipeline
         {
             steps 
             {
-                sh '/opt/sonar/bin/sonar-scanner -Dsonar.projectKey=TX-DevSecOps -Dsonar.sources=. -Dsonar.host.url=http://192.168.6.208:9000 -Dsonar.login=0d90d181acd0758123294772dfd246db84ed932a -X'
+                sh '/opt/sonar/bin/sonar-scanner -Dsonar.projectKey=TX-DevSecOps -Dsonar.sources=. -Dsonar.host.url=http://192.168.6.208:9000 -Dsonar.login=973b03079dcffe8cda74174488d1d4e5146a8f65 -X'
 
                 sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=SonarQube Scan" -F "file=@sonar-report-v1.1.0_java-tomcat_Sonarcloud-v8.0.0.485.html;type=text/html" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
 
@@ -30,34 +30,6 @@ pipeline
                 echo 'Application hosted on Local Server'
             }
         }  
-        stage('Arachni - DAST') 
-        {
-            steps 
-            {
-                sh 'sudo /root/devsecops/arachni/bin/arachni http://192.168.6.190/Vulnerable-Web-Application/homepage.html'
-
-                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=Arachni Scan" -F "file=@arachni.afr.json;type=application/json" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
-            }
-        }  
-        stage('BURP - DAST') 
-        {
-            steps 
-            {
-                echo 'Runing Burp Scan'
-
-                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=Burp Scan" -F "file=@burpvulns_v2_1_02.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
-            }
-        }
-         stage('Nikto - DAST') 
-        {
-            steps 
-            {
-                sh 'nikto -h http://192.168.6.190/Vulnerable-Web-Application/homepage.html'
-
-                sh 'curl -X POST "http://192.168.6.208:8080/api/v2/import-scan/" -H  "accept: application/json" -H  "Authorization: Token 3d1fca9401ab1ba00e542d0b9289b8a06c355703" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: fbnssyFHyltk8UQHGje6fos8XAvdhqz56GlQ8Rs0EmmxLuOtvqg7ghIXWhDsHcLy" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=Nikto Scan" -F "file=@nikto.xml;type=text/xml" -F "product_name=TX-DevSecOps" -F "engagement_name=DevSecOps-TX" -F "close_old_findings=false" -F "push_to_jira=false"'
-                
-            }
-        }
         stage('ZAP - DAST') 
         {
             steps 
